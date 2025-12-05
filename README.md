@@ -25,17 +25,64 @@ It takes the sample from each channel per revolution and rotates at the rate of 
 7)	Set the amplitude of the input sine wave desired.   
 8)	Take the observations as mentioned below.
 
-### Kit Diagram
-<img width="480" height="324" alt="image" src="https://github.com/user-attachments/assets/b2f8f171-ceff-4481-add2-bc4ef1c42506" />
+## Program
+t = linspace(0, 1, 1000);
+fs = 1000; 
 
-### Model Graph
-<img width="718" height="933" alt="image" src="https://github.com/user-attachments/assets/09c11b43-dc9c-4bf9-a04a-0728d0b0fea3" />
+freqs = [4, 8, 12, 16, 20, 24];
+
+signals = zeros(6, length(t));
+for i = 1:6
+    signals(i, :) = sin(2 * %pi * freqs(i) * t);
+end
+
+fdm_signal = zeros(1, length(t));
+for i = 1:6
+    fdm_signal = fdm_signal + signals(i, :);
+end
+
+order = 50;
+cutoff_freq = 8 / (fs/2); 
+h = ffilt("lp", order, cutoff_freq);
+
+demux_signals = zeros(6, length(t));
+for i = 1:6
+    mixed = fdm_signal .* sin(2 * %pi * freqs(i) * t);
+    demux_signals(i, :) = filter(h, 1, mixed);
+end
+
+scf(1);
+clf;
+for i = 1:6
+    subplot(3,2,i);
+    plot(t, signals(i, :));
+    title('Original Signal f=' + string(freqs(i)));
+end
+
+scf(2);
+clf;
+plot(t, fdm_signal);
+title('FDM Signal');
+
+scf(3);
+clf;
+for i = 1:6
+    subplot(3,2,i);
+    plot(t, demux_signals(i, :));
+    title('Demultiplexed Signal f=' + string(freqs(i)));
+end
+
 
 ### Tabulation
+![WhatsApp Image 2025-12-06 at 00 00 43_8d68429b](https://github.com/user-attachments/assets/52c4dd45-e584-4a2d-a882-fd19bc1a6b39)
 
-<img width="672" height="448" alt="image" src="https://github.com/user-attachments/assets/05600b28-ba54-4cd4-9ff4-f088865e85ae" />
+## Graph
+<img width="1915" height="901" alt="image" src="https://github.com/user-attachments/assets/3a1fd100-4d12-48bb-840d-87d480f50ec0" />
+<img width="1648" height="804" alt="image" src="https://github.com/user-attachments/assets/106a81f2-b46d-4398-9610-50c1f4f1b2f1" />
+<img width="1919" height="909" alt="image" src="https://github.com/user-attachments/assets/3756305b-1921-43ca-bd3a-fa8f694ca2e7" />
+
 
 ### Result
-
+The program successfully simulates FDM and demultiplexing for multiple frequency signals with filtering to recover original signals accurately in Scilab.
 
 
