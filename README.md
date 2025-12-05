@@ -1,4 +1,4 @@
-# EVALUATION-OF-TIME-DIVISION-MULTIPLEXING
+# EVALUATION-OF-FREQUENCY-DIVISION-MULTIPLEXING
 
 ### Aim:
 Study of TDM pulse amplitude modulation/ demodulation with transmitter block (clock) and channel identification information linked directly to the receivers.  
